@@ -5,7 +5,7 @@ import { validateFields } from '../utils/common';
 import { Link } from 'react-router-dom';
 import { registerNewUser } from '../actions/auth';
 
-export default class Register extends React.Component {
+class Register extends React.Component {
   state = {
     first_name: '',
     last_name: '',
@@ -142,3 +142,4 @@ export default class Register extends React.Component {
     );
   }
 }
+export default connect()(Register);
