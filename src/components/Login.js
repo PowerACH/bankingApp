@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { Form, Button } from 'react-bootstrap';
+import { initiateLogin } from '../actions/auth';
+import { resetErrors } from '../actions/errors';
 import { validateFields } from '../utils/common';
 import { Link } from 'react-router-dom';
 
@@ -10,6 +13,16 @@ class Login extends React.Component {
       password: '',
       errorMsg: ''
     };
+
+    componentDidUpdate(prevProps) {
+      if (!_.isEqual(prevProps.errors, this.props.errors)) { //we check if prev props not equal to current props by using lodash isEqual method 
+        this.setState({ errorMsg: this.props.errors });//and only then set error in the errorMsg state. This is necessary to avoid the infinite loop error.
+      }
+    }
+  
+    componentWillUnmount() {
+      this.props.dispatch(resetErrors());
+    }
   
     handleLogin = (event) => {
       event.preventDefault();
@@ -30,6 +43,7 @@ class Login extends React.Component {
           }
         }); 
         // login successful
+        this.props.dispatch(initiateLogin(email, password));
       }
     };
   
@@ -85,5 +99,10 @@ class Login extends React.Component {
       );
     }
   }
+//when there is an error added in the redux store, we will get an error in props.errors
+//we take that updated prop value by implementing the componentDidUpdate method
+  const mapStateToProps = (state) => ({
+    errors: state.errors
+  });
   
-  export default connect()(Login);
+  export default connect(mapStateToProps)(Login);

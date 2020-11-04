@@ -1,5 +1,6 @@
 import { SIGN_IN, BASE_API_URL } from '../utils/constants';
 import axios from 'axios';
+import { getErrors } from './errors'; //import for the getErrors action function
 
 export const signIn = (user) => ({
   type: SIGN_IN,
@@ -18,6 +19,7 @@ export const initiateLogin = (email, password) => {
       dispatch(signIn(user));
     } catch (error) {
       console.log('error');
+      error.response && dispatch(getErrors(error.response.data)); //the response sent from the server will be available in error.respons.data object, which we add to the reducer
     }
   };
 };
